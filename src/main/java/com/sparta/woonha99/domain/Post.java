@@ -36,6 +36,6 @@ public class Post extends Timestamped {
     private Member member;
 
     @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Like> likes;
+    private List<PostLike> postlikes;
 
 }

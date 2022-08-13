@@ -1,13 +1,13 @@
 package com.sparta.woonha99.controller;
 
-import com.sparta.woonha99.service.LikeService;
+import com.sparta.woonha99.service.CommentLikeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-public class LikeController {
+public class CommentLikeController {
 
-    private final LikeService likeService;
+    private final CommentLikeService commentLikeService;
 
 }
