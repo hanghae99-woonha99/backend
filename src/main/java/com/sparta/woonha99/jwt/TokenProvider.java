@@ -10,6 +10,7 @@ import com.sparta.woonha99.shared.Authority;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SecurityException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -37,44 +38,42 @@ public class TokenProvider {
 //  private final UserDetailsServiceImpl userDetailsService;
 
   public TokenProvider(@Value("${jwt.secret}") String secretKey,
-      RefreshTokenRepository refreshTokenRepository) {
+                       RefreshTokenRepository refreshTokenRepository) {
     this.refreshTokenRepository = refreshTokenRepository;
     byte[] keyBytes = Decoders.BASE64.decode(secretKey);
     this.key = Keys.hmacShaKeyFor(keyBytes);
   }
 
-  public TokenDto generateTokenDto(Authentication authentication) {
+  public TokenDto generateTokenDto(Member member) {
     long now = (new Date().getTime());
 
     Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
     String accessToken = Jwts.builder()
-        .setSubject(authentication.getName())
-        .claim(AUTHORITIES_KEY, Authority.ROLE_MEMBER.toString())
-        .setExpiration(accessTokenExpiresIn)
-        .signWith(key, SignatureAlgorithm.HS256)
-        .compact();
+            .setSubject(member.getNickname())
+            .claim(AUTHORITIES_KEY, Authority.ROLE_MEMBER.toString())
+            .setExpiration(accessTokenExpiresIn)
+            .signWith(key, SignatureAlgorithm.HS256)
+            .compact();
 
     String refreshToken = Jwts.builder()
-        .setExpiration(new Date(now + REFRESH_TOKEN_EXPRIRE_TIME))
-        .signWith(key, SignatureAlgorithm.HS256)
-        .compact();
-
-    Member member = ((UserDetailsImpl) authentication.getPrincipal()).getMember();
+            .setExpiration(new Date(now + REFRESH_TOKEN_EXPRIRE_TIME))
+            .signWith(key, SignatureAlgorithm.HS256)
+            .compact();
 
     RefreshToken refreshTokenObject = RefreshToken.builder()
-        .id(member.getMemberId())
-        .member(member)
-        .value(refreshToken)
-        .build();
+            .id(member.getMemberId())
+            .member(member)
+            .value(refreshToken)
+            .build();
 
     refreshTokenRepository.save(refreshTokenObject);
 
     return TokenDto.builder()
-        .grantType(BEARER_PREFIX)
-        .accessToken(accessToken)
-        .accessTokenExpiresIn(accessTokenExpiresIn.getTime())
-        .refreshToken(refreshToken)
-        .build();
+            .grantType(BEARER_PREFIX)
+            .accessToken(accessToken)
+            .accessTokenExpiresIn(accessTokenExpiresIn.getTime())
+            .refreshToken(refreshToken)
+            .build();
 
   }
 
@@ -95,10 +94,10 @@ public class TokenProvider {
 //    return new UsernamePasswordAuthenticationToken(principal, "", authorities);
 //  }
 
-  public Member getUserFromAuthentication() {
+  public Member getMemberFromAuthentication() {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     if (authentication == null || AnonymousAuthenticationToken.class.
-        isAssignableFrom(authentication.getClass())) {
+            isAssignableFrom(authentication.getClass())) {
       return null;
     }
     return ((UserDetailsImpl) authentication.getPrincipal()).getMember();
