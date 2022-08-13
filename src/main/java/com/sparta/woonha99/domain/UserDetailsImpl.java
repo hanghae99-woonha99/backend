@@ -16,11 +16,11 @@ import java.util.Collection;
 @AllArgsConstructor
 public class UserDetailsImpl implements UserDetails {
 
-    private User user;
+    private Member user;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(Authority.ROLE_USER.toString());
+        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(Authority.ROLE_MEMBER.toString());
         Collection<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(authority);
         return authorities;

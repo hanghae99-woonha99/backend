@@ -1,13 +1,13 @@
 package com.sparta.woonha99.controller;
 
-import com.sparta.woonha99.service.UserService;
+import com.sparta.woonha99.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-public class UserController {
+public class MemberController {
 
-    private final UserService userService;
+    private final MemberService memberService;
 
 }

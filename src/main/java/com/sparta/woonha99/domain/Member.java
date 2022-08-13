@@ -12,12 +12,12 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "member")
-public class User extends Timestamped {
+@Entity(name = "members")
+public class Member extends Timestamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId;
+    private Long memberId;
 
     @Column(nullable = false)
     private String nickname;
