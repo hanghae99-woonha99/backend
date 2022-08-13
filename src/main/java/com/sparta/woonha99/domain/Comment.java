@@ -31,5 +31,5 @@ public class Comment extends Timestamped {
     private String descript;
 
     @OneToMany(mappedBy = "comment", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Like> likes;
+    private List<CommentLike> commentlikes;
 }

@@ -11,12 +11,12 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Entity(name = "likes")
-public class Like extends Timestamped {
+@Entity(name = "post_like")
+public class PostLike extends Timestamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long likeId;
+    private Long postLikeId;
 
     @JoinColumn(name = "member_id")
     @ManyToOne(fetch = FetchType.LAZY)
@@ -26,7 +26,4 @@ public class Like extends Timestamped {
     @ManyToOne(fetch = FetchType.LAZY)
     private Post post;
 
-    @JoinColumn(name = "comment_id")
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Comment comment;
 }
