@@ -1,13 +1,13 @@
 package com.sparta.woonha99.service;
 
-import com.sparta.woonha99.repository.UserRepository;
+import com.sparta.woonha99.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class UserService {
+public class MemberService {
 
-    private final UserRepository userRepository;
+    private final MemberRepository memberRepository;
 
 }
