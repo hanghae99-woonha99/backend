@@ -43,12 +43,12 @@ public class TokenProvider {
     this.key = Keys.hmacShaKeyFor(keyBytes);
   }
 
-  public TokenDto generateTokenDto(Member member) {
+  public TokenDto generateTokenDto(Authentication authentication) {
     long now = (new Date().getTime());
 
     Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
     String accessToken = Jwts.builder()
-        .setSubject(member.getNickname())
+        .setSubject(authentication.getName())
         .claim(AUTHORITIES_KEY, Authority.ROLE_MEMBER.toString())
         .setExpiration(accessTokenExpiresIn)
         .signWith(key, SignatureAlgorithm.HS256)
@@ -58,6 +58,8 @@ public class TokenProvider {
         .setExpiration(new Date(now + REFRESH_TOKEN_EXPRIRE_TIME))
         .signWith(key, SignatureAlgorithm.HS256)
         .compact();
+
+    Member member = ((UserDetailsImpl) authentication.getPrincipal()).getMember();
 
     RefreshToken refreshTokenObject = RefreshToken.builder()
         .id(member.getMemberId())
@@ -99,7 +101,7 @@ public class TokenProvider {
         isAssignableFrom(authentication.getClass())) {
       return null;
     }
-    return ((UserDetailsImpl) authentication.getPrincipal()).getUser();
+    return ((UserDetailsImpl) authentication.getPrincipal()).getMember();
   }
 
   public boolean validateToken(String token) {
