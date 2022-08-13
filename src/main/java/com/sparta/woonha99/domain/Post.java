@@ -1,5 +1,6 @@
 package com.sparta.woonha99.domain;
 
+import com.sparta.woonha99.dto.request.PostRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -37,5 +38,21 @@ public class Post extends Timestamped {
 
     @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PostLike> postlikes;
+
+    public void update(PostRequestDto postRequestDto) {
+        this.title = postRequestDto.getTitle();
+        this.descript = postRequestDto.getDescript();
+        this.imgUrl = postRequestDto.getImgUrl();
+    }
+
+    public void update(String imgUrl) {
+        this.imgUrl = imgUrl;
+    }
+
+    public boolean validateMember(Member member) {
+
+        return !this.member.equals(member);
+
+    }
 
 }
