@@ -63,11 +63,15 @@ public class MemberService {
                     "존재하지 않는 아이디입니다.");
         }
 
-        UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(requestDto.getNickname(), requestDto.getPassword());
-        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+        if (!member.validatePassword(passwordEncoder, requestDto.getPassword())) {
+            return ResponseDto.fail("INVALID_MEMBER", "사용자를 찾을 수 없습니다.");
+        }
 
-        TokenDto tokenDto = tokenProvider.generateTokenDto(authentication);
+//        UsernamePasswordAuthenticationToken authenticationToken =
+//                new UsernamePasswordAuthenticationToken(requestDto.getNickname(), requestDto.getPassword());
+//        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+
+        TokenDto tokenDto = tokenProvider.generateTokenDto(member);
         tokenToHeaders(tokenDto, response);
 
         return ResponseDto.success(
@@ -86,8 +90,8 @@ public class MemberService {
     }
 
     public void tokenToHeaders(TokenDto tokenDto, HttpServletResponse response) {
-        response.addHeader("Access-Token", "Bearer " + tokenDto.getAccessToken());
-        response.addHeader("Refresh-Token", "Bearer " + tokenDto.getRefreshToken());
+        response.addHeader("Authorization", "Bearer " + tokenDto.getAccessToken());
+        response.addHeader("Refresh-Token", tokenDto.getRefreshToken());
         response.addHeader("Access-Token-Expire-Time", tokenDto.getAccessTokenExpiresIn().toString());
     }
 
