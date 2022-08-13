@@ -1,6 +1,5 @@
 package com.sparta.woonha99.domain;
 
-import com.sparta.woonha99.dto.request.PostLikeRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -27,14 +26,4 @@ public class PostLike extends Timestamped {
     @ManyToOne(fetch = FetchType.LAZY)
     private Post post;
 
-    @Column(name = "is_like", nullable = false)
-    private boolean isLike;
-
-    public void updatePostLike() {
-        this.isLike = !this.isLike;
-    }
-
-    public boolean validateMember(Member member) {
-        return !this.member.equals(member);
-    }
 }
