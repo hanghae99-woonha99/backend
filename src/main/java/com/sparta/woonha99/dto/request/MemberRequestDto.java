@@ -11,7 +11,7 @@ import javax.validation.constraints.Size;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserRequestDto {
+public class MemberRequestDto {
 
     @NotBlank
     @Size(min = 4, max = 12)

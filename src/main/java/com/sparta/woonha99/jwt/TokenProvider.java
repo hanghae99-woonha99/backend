@@ -1,6 +1,6 @@
 package com.sparta.woonha99.jwt;
 
-import com.sparta.woonha99.domain.User;
+import com.sparta.woonha99.domain.Member;
 import com.sparta.woonha99.domain.RefreshToken;
 import com.sparta.woonha99.domain.UserDetailsImpl;
 import com.sparta.woonha99.dto.request.TokenDto;
@@ -43,13 +43,13 @@ public class TokenProvider {
     this.key = Keys.hmacShaKeyFor(keyBytes);
   }
 
-  public TokenDto generateTokenDto(User user) {
+  public TokenDto generateTokenDto(Member member) {
     long now = (new Date().getTime());
 
     Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
     String accessToken = Jwts.builder()
-        .setSubject(user.getNickname())
-        .claim(AUTHORITIES_KEY, Authority.ROLE_USER.toString())
+        .setSubject(member.getNickname())
+        .claim(AUTHORITIES_KEY, Authority.ROLE_MEMBER.toString())
         .setExpiration(accessTokenExpiresIn)
         .signWith(key, SignatureAlgorithm.HS256)
         .compact();
@@ -60,8 +60,8 @@ public class TokenProvider {
         .compact();
 
     RefreshToken refreshTokenObject = RefreshToken.builder()
-        .id(user.getUserId())
-        .user(user)
+        .id(member.getMemberId())
+        .member(member)
         .value(refreshToken)
         .build();
 
@@ -93,7 +93,7 @@ public class TokenProvider {
 //    return new UsernamePasswordAuthenticationToken(principal, "", authorities);
 //  }
 
-  public User getUserFromAuthentication() {
+  public Member getUserFromAuthentication() {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     if (authentication == null || AnonymousAuthenticationToken.class.
         isAssignableFrom(authentication.getClass())) {
@@ -127,14 +127,14 @@ public class TokenProvider {
 //  }
 
   @Transactional(readOnly = true)
-  public RefreshToken isPresentRefreshToken(User user) {
-    Optional<RefreshToken> optionalRefreshToken = refreshTokenRepository.findByUser(user);
+  public RefreshToken isPresentRefreshToken(Member member) {
+    Optional<RefreshToken> optionalRefreshToken = refreshTokenRepository.findByMember(member);
     return optionalRefreshToken.orElse(null);
   }
 
   @Transactional
-  public ResponseDto<?> deleteRefreshToken(User user) {
-    RefreshToken refreshToken = isPresentRefreshToken(user);
+  public ResponseDto<?> deleteRefreshToken(Member member) {
+    RefreshToken refreshToken = isPresentRefreshToken(member);
     if (null == refreshToken) {
       return ResponseDto.fail("TOKEN_NOT_FOUND", "존재하지 않는 Token 입니다.");
     }

@@ -18,9 +18,9 @@ public class Like extends Timestamped {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long likeId;
 
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "member_id")
     @ManyToOne(fetch = FetchType.LAZY)
-    private User user;
+    private Member member;
 
     @JoinColumn(name = "post_id")
     @ManyToOne(fetch = FetchType.LAZY)
