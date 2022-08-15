@@ -16,29 +16,29 @@ public class PostController {
 
     private final PostService postService;
 
-    @PostMapping("/api/auth/posts")
+    @PostMapping("/auth/posts")
     public ResponseDto<?> createPost(@RequestPart("data") PostRequestDto requestDto,
                                      HttpServletRequest request,
                                      @RequestPart("image") MultipartFile multipartFile) throws IOException {
         return postService.createPost(requestDto, request, multipartFile);
     }
 
-    @GetMapping("/api/posts")
+    @GetMapping("/posts")
     public ResponseDto<?> getAllPosts() {
         return postService.getAllPosts();
     }
 
-    @GetMapping("/api/posts/{postId}")
+    @GetMapping("/posts/{postId}")
     public ResponseDto<?> getPost(@PathVariable Long postId) {
         return postService.getPostByPostId(postId);
     }
     
-    @PutMapping("/api/auth/posts/{postId}")
+    @PutMapping("/auth/posts/{postId}")
     public ResponseDto<?> updatePost(@PathVariable Long postId, @RequestBody PostRequestDto requestDto,HttpServletRequest request){
         return postService.updatePostByPostId(postId, requestDto, request);
     }
 
-    @DeleteMapping("/api/auth/posts/{postId}")
+    @DeleteMapping("/auth/posts/{postId}")
     public ResponseDto<?> deletePost(@PathVariable Long postId, HttpServletRequest request) {
         return postService.deletePostByPostId(postId, request);
     }

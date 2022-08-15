@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/auth/comments")
+@RequestMapping("/auth/comments")
 public class CommentController {
 
     private final CommentService commentService;

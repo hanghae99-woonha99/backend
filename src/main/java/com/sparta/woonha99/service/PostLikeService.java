@@ -3,6 +3,7 @@ package com.sparta.woonha99.service;
 import com.sparta.woonha99.domain.Member;
 import com.sparta.woonha99.domain.Post;
 import com.sparta.woonha99.domain.PostLike;
+import com.sparta.woonha99.dto.response.LikeResponseDto;
 import com.sparta.woonha99.dto.response.ResponseDto;
 import com.sparta.woonha99.repository.PostLikeRepository;
 import com.sparta.woonha99.jwt.TokenProvider;
@@ -51,9 +52,19 @@ public class PostLikeService {
             return ResponseDto.fail("BAD_REQUEST", "작성자만 수정할 수 있습니다.");
         }
 
-        return postLike.isLike() ?
-                ResponseDto.success("게시글 좋아요 성공") :
-                ResponseDto.success("게시글 좋아요 취소 성공");
+        return postLike.getIsLike() ?
+                ResponseDto.success(
+                        LikeResponseDto.builder()
+                                .isLike(postLike.getIsLike())
+                                .msg("게시글 좋아요 성공")
+                                .build()
+                ) :
+                ResponseDto.success(
+                        LikeResponseDto.builder()
+                                .isLike(postLike.getIsLike())
+                                .msg("게시글 좋아요 취소 성공")
+                                .build()
+                );
     }
 
     @Transactional(readOnly = true)

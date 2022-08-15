@@ -13,7 +13,7 @@ public class PostLikeController {
 
     private final PostLikeService postLikeService;
 
-    @GetMapping("/api/auth/posts/{postId}/likes")
+    @GetMapping("/auth/posts/{postId}/likes")
     public ResponseDto<?> togglePostLike(@PathVariable Long postId, HttpServletRequest request) {
         return postLikeService.togglePostLikeByPostId(postId, request);
     }

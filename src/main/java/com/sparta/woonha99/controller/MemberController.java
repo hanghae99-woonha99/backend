@@ -2,6 +2,7 @@ package com.sparta.woonha99.controller;
 
 import com.sparta.woonha99.dto.request.LoginRequestDto;
 import com.sparta.woonha99.dto.request.MemberRequestDto;
+import com.sparta.woonha99.dto.response.MemberResponseDto;
 import com.sparta.woonha99.dto.response.ResponseDto;
 import com.sparta.woonha99.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -13,15 +14,20 @@ import javax.validation.Valid;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/members")
+@RequestMapping("/members")
 public class MemberController {
 
   private final MemberService memberService;
 
   @GetMapping("/validate/nickname")
-  public ResponseDto<?> validateNickname(@RequestBody MemberRequestDto requestDto) {
+  public ResponseDto<?> validateNickname(@RequestBody @Valid MemberRequestDto requestDto) {
     return memberService.validateNickname(requestDto) ?
-            ResponseDto.success("사용 가능한 아이디 입니다.") :
+            ResponseDto.success(
+                    MemberResponseDto.builder()
+                            .valid(memberService.validateNickname(requestDto))
+                            .msg("사용할 수 있는 아이디입니다.")
+                            .build()
+            ) :
             ResponseDto.fail("NICKNAME_DUPLICATED", "중복되는 아이디 입니다.");
   }
 

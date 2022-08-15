@@ -2,6 +2,7 @@ package com.sparta.woonha99.service;
 
 import com.sparta.woonha99.domain.*;
 import com.sparta.woonha99.dto.request.CommentRequestDto;
+import com.sparta.woonha99.dto.response.CommentResponseDto;
 import com.sparta.woonha99.dto.response.ResponseDto;
 import com.sparta.woonha99.jwt.TokenProvider;
 import com.sparta.woonha99.repository.CommentLikeRepository;
@@ -59,7 +60,11 @@ public class CommentService {
                 .build();
         commentLikeRepository.save(commentLike);
 
-        return ResponseDto.success("댓글 작성 완료");
+        return ResponseDto.success(
+                CommentResponseDto.builder()
+                        .msg("댓글 작성 완료")
+                        .build()
+        );
     }
 
     @Transactional
@@ -91,7 +96,11 @@ public class CommentService {
 
         commentRepository.delete(comment);
 
-        return ResponseDto.success("댓글 삭제 완료");
+        return ResponseDto.success(
+                CommentResponseDto.builder()
+                        .msg("댓글 삭제 완료")
+                        .build()
+        );
     }
 
     @Transactional(readOnly = true)
