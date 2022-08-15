@@ -4,6 +4,7 @@ import com.sparta.woonha99.domain.Member;
 import com.sparta.woonha99.domain.RefreshToken;
 import com.sparta.woonha99.domain.UserDetailsImpl;
 import com.sparta.woonha99.dto.request.TokenDto;
+import com.sparta.woonha99.dto.response.MemberResponseDto;
 import com.sparta.woonha99.dto.response.ResponseDto;
 import com.sparta.woonha99.repository.RefreshTokenRepository;
 import com.sparta.woonha99.shared.Authority;
@@ -141,6 +142,10 @@ public class TokenProvider {
     }
 
     refreshTokenRepository.delete(refreshToken);
-    return ResponseDto.success("로그아웃 성공");
+    return ResponseDto.success(
+            MemberResponseDto.builder()
+                    .msg("로그아웃 성공")
+                    .build()
+    );
   }
 }
