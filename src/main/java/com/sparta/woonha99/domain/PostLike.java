@@ -1,5 +1,6 @@
 package com.sparta.woonha99.domain;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -27,7 +28,7 @@ public class PostLike extends Timestamped {
     private Post post;
 
     @Column(name = "is_like", nullable = false)
-    private boolean isLike;
+    private Boolean isLike;
 
     public void updatePostLike() {
         this.isLike = !this.isLike;

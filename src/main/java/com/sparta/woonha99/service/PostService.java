@@ -65,7 +65,12 @@ public class PostService {
                 .build();
         postLikeRepository.save(postLike);
 
-        return ResponseDto.success("게시물 등록 완료");
+        return ResponseDto.success(
+            PostResponseDto.builder()
+                    .msg("게시글 작성 완료")
+                    .postLikesCnt(null)
+                    .build()
+        );
     }
 
     @Transactional(readOnly = true)
@@ -158,7 +163,11 @@ public class PostService {
         }
 
         post.update(requestDto);
-        return ResponseDto.success("게시물 수정 완료");
+        return ResponseDto.success(
+                PostResponseDto.builder()
+                        .msg("게시물 수정 완료")
+                        .build()
+        );
     }
 
     @Transactional
@@ -188,7 +197,11 @@ public class PostService {
         }
 
         postRepository.delete(post);
-        return ResponseDto.success("게시물 삭제 완료");
+        return ResponseDto.success(
+                PostResponseDto.builder()
+                        .msg("게시물 삭제 완료")
+                        .build()
+        );
     }
 
     @Transactional(readOnly = true)

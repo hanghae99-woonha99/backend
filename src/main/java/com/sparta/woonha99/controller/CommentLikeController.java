@@ -15,7 +15,7 @@ public class CommentLikeController {
 
     private final CommentLikeService commentLikeService;
 
-    @GetMapping("/api/auth/comments/{commentId}/likes")
+    @GetMapping("/auth/comments/{commentId}/likes")
     public ResponseDto<?> toggleCommentLike(@PathVariable Long commentId, HttpServletRequest request) {
         return commentLikeService.toggleCommentLikeByCommentId(commentId, request);
     }

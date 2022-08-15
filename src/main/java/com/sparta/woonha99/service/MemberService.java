@@ -44,7 +44,12 @@ public class MemberService {
             .build();
     memberRepository.save(member);
 
-    return ResponseDto.success("회원가입 완료");
+    return ResponseDto.success(
+            MemberResponseDto.builder()
+                    .nickname(member.getNickname())
+                    .msg("회원가입 완료")
+                    .build()
+    );
   }
 
   @Transactional
@@ -56,7 +61,7 @@ public class MemberService {
     }
 
     if (!member.validatePassword(passwordEncoder, requestDto.getPassword())) {
-      return ResponseDto.fail("INVALID_MEMBER", "사용자를 찾을 수 없습니다.");
+      return ResponseDto.fail("INVALID_PASSWORD", "비밀번호가 일치하지 않습니다.");
     }
 
 //    UsernamePasswordAuthenticationToken authenticationToken =
@@ -66,7 +71,12 @@ public class MemberService {
     TokenDto tokenDto = tokenProvider.generateTokenDto(member);
     tokenToHeaders(tokenDto, response);
 
-    return ResponseDto.success("로그인 성공");
+    return ResponseDto.success(
+            MemberResponseDto.builder()
+                    .nickname(member.getNickname())
+                    .msg("로그인 성공")
+                    .build()
+    );
   }
 
 //  @Transactional
