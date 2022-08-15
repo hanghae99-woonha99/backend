@@ -34,8 +34,11 @@ public class PostController {
     }
     
     @PutMapping("/auth/posts/{postId}")
-    public ResponseDto<?> updatePost(@PathVariable Long postId, @RequestBody PostRequestDto requestDto,HttpServletRequest request){
-        return postService.updatePostByPostId(postId, requestDto, request);
+    public ResponseDto<?> updatePost(@PathVariable Long postId,
+                                     @RequestPart("data") PostRequestDto requestDto,
+                                     @RequestPart("image") MultipartFile multipartFile,
+                                     HttpServletRequest request) throws IOException {
+        return postService.updatePostByPostId(postId, requestDto, multipartFile, request);
     }
 
     @DeleteMapping("/auth/posts/{postId}")
