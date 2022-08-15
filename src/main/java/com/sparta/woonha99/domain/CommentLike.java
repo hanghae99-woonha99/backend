@@ -27,7 +27,7 @@ public class CommentLike extends Timestamped {
     private Comment comment;
 
     @Column(name = "is_like", nullable = false)
-    private boolean isLike;
+    private Boolean isLike;
 
     public void updateCommentLike() {
         this.isLike = !this.isLike;

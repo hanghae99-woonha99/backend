@@ -1,6 +1,7 @@
 package com.sparta.woonha99.service;
 
 import com.sparta.woonha99.domain.*;
+import com.sparta.woonha99.dto.response.LikeResponseDto;
 import com.sparta.woonha99.dto.response.ResponseDto;
 import com.sparta.woonha99.jwt.TokenProvider;
 import com.sparta.woonha99.repository.CommentLikeRepository;
@@ -43,15 +44,25 @@ public class CommentLikeService {
 
         CommentLike commentLike = isPresentCommentLikeByComment(comment);
         commentLike.updateCommentLike();
-        System.out.println("Comment Like : " + commentLike.isLike());
+        System.out.println("Comment Like : " + commentLike.getIsLike());
 
         if (comment.validateMember(member)) {
             return ResponseDto.fail("BAD_REQUEST", "작성자만 수정할 수 있습니다.");
         }
 
-        return commentLike.isLike() ?
-                ResponseDto.success("댓글 좋아요 성공") :
-                ResponseDto.success("댓글 좋아요 취소 성공");
+        return commentLike.getIsLike() ?
+                ResponseDto.success(
+                        LikeResponseDto.builder()
+                                .isLike(commentLike.getIsLike())
+                                .msg("댓글 좋아요 성공")
+                                .build()
+                ) :
+                ResponseDto.success(
+                        LikeResponseDto.builder()
+                                .isLike(commentLike.getIsLike())
+                                .msg("댓글 좋아요 취소 성공")
+                                .build()
+                );
     }
 
     @Transactional(readOnly = true)
