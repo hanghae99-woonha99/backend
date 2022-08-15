@@ -149,7 +149,8 @@ public class PostService {
     }
 
     @Transactional
-    public ResponseDto<?> updatePostByPostId(Long postId, PostRequestDto requestDto, HttpServletRequest request) {
+    public ResponseDto<?> updatePostByPostId(Long postId, PostRequestDto requestDto,
+                                             MultipartFile multipartFile, HttpServletRequest request) throws IOException {
         if (null == request.getHeader("Refresh-Token")) {
             return ResponseDto.fail("MEMBER_NOT_FOUND",
                     "로그인이 필요합니다.");
@@ -174,7 +175,15 @@ public class PostService {
             return ResponseDto.fail("BAD_REQUEST", "작성자만 수정할 수 있습니다.");
         }
 
-        post.update(requestDto);
+        String imgUrl = post.getImgUrl();
+        if (!multipartFile.isEmpty()) {
+            imgUrl = s3Uploader.upload(multipartFile, "static");
+            System.out.println("imgUrl: "+imgUrl);
+        } else {
+            imgUrl = "";
+        }
+
+        post.update(requestDto, imgUrl);
         return ResponseDto.success(
                 PostResponseDto.builder()
                         .msg("게시물 수정 완료")

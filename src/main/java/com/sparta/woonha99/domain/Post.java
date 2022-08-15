@@ -39,10 +39,10 @@ public class Post extends Timestamped {
     @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PostLike> postLikes;
 
-    public void update(PostRequestDto postRequestDto) {
+    public void update(PostRequestDto postRequestDto, String imgUrl) {
         this.title = postRequestDto.getTitle();
         this.descript = postRequestDto.getDescript();
-        this.imgUrl = postRequestDto.getImgUrl();
+        this.imgUrl = imgUrl;
     }
 
     public boolean validateMember(Member member) {
