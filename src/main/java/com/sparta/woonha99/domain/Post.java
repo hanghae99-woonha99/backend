@@ -1,5 +1,6 @@
 package com.sparta.woonha99.domain;
 
+import com.sparta.woonha99.dto.request.PostRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,14 +29,24 @@ public class Post extends Timestamped {
     @Column
     private String imgUrl;
 
+    @JoinColumn(name = "member_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Member member;
+
     @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
 
-    @JoinColumn(name = "user_id", nullable = false)
-    @ManyToOne(fetch = FetchType.LAZY)
-    private User user;
-
     @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Like> likes;
+    private List<PostLike> postLikes;
+
+    public void update(PostRequestDto postRequestDto, String imgUrl) {
+        this.title = postRequestDto.getTitle();
+        this.descript = postRequestDto.getDescript();
+        this.imgUrl = imgUrl;
+    }
+
+    public boolean validateMember(Member member) {
+        return !this.member.equals(member);
+    }
 
 }
