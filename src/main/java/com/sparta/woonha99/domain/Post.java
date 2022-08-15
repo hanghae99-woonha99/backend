@@ -29,15 +29,15 @@ public class Post extends Timestamped {
     @Column
     private String imgUrl;
 
-    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Comment> comments;
-
     @JoinColumn(name = "member_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 
     @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PostLike> postlikes;
+    private List<Comment> comments;
+
+    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PostLike> postLikes;
 
     public void update(PostRequestDto postRequestDto) {
         this.title = postRequestDto.getTitle();
@@ -45,14 +45,12 @@ public class Post extends Timestamped {
         this.imgUrl = postRequestDto.getImgUrl();
     }
 
-    public void update(String imgUrl) {
-        this.imgUrl = imgUrl;
-    }
+//    public void update(String imgUrl) {
+//        this.imgUrl = imgUrl;
+//    }
 
     public boolean validateMember(Member member) {
-
         return !this.member.equals(member);
-
     }
 
 }

@@ -3,11 +3,9 @@ package com.sparta.woonha99.service;
 import com.sparta.woonha99.domain.Member;
 import com.sparta.woonha99.domain.Post;
 import com.sparta.woonha99.domain.PostLike;
-import com.sparta.woonha99.dto.request.PostLikeRequestDto;
 import com.sparta.woonha99.dto.response.ResponseDto;
 import com.sparta.woonha99.repository.PostLikeRepository;
 import com.sparta.woonha99.jwt.TokenProvider;
-import com.sparta.woonha99.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +18,6 @@ import java.util.Optional;
 public class PostLikeService {
 
     private final PostService postService;
-    private final PostRepository postRepository;
     private final PostLikeRepository postLikeRepository;
     private final TokenProvider tokenProvider;
 
@@ -47,7 +44,7 @@ public class PostLikeService {
             return ResponseDto.fail("NOT_FOUND", "존재하지 않는 게시글 id 입니다.");
         }
 
-        PostLike postLike = isPresentPostLikeByMemberAndPost(post, member);
+        PostLike postLike = isPresentPostLikeByPost(post);
         postLike.updatePostLike();
 
         if (post.validateMember(member)) {
@@ -55,13 +52,13 @@ public class PostLikeService {
         }
 
         return postLike.isLike() ?
-                ResponseDto.success("좋아요 성공") :
-                ResponseDto.success("좋아요 취소 성공");
+                ResponseDto.success("게시글 좋아요 성공") :
+                ResponseDto.success("게시글 좋아요 취소 성공");
     }
 
     @Transactional(readOnly = true)
-    public PostLike isPresentPostLikeByMemberAndPost(Post post, Member member) {
-        Optional<PostLike> optionalLike = postLikeRepository.findByPostAndMember(post, member);
+    public PostLike isPresentPostLikeByPost(Post post) {
+        Optional<PostLike> optionalLike = postLikeRepository.findByPost(post);
         return optionalLike.orElse(null);
     }
 

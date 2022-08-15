@@ -11,10 +11,10 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 public class LoginRequestDto {
 
-    @NotBlank
-    private String nickname;
+  @NotBlank
+  private String nickname;
 
-    @NotBlank
-    private String password;
+  @NotBlank
+  private String password;
 
 }

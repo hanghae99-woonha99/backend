@@ -19,6 +19,9 @@ public class Comment extends Timestamped {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long commentId;
 
+    @Column(nullable = false)
+    private String descript;
+
     @JoinColumn(name = "member_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
@@ -27,9 +30,10 @@ public class Comment extends Timestamped {
     @ManyToOne(fetch = FetchType.LAZY)
     private Post post;
 
-    @Column(nullable = false)
-    private String descript;
-
     @OneToMany(mappedBy = "comment", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<CommentLike> commentlikes;
+    private List<CommentLike> commentLikes;
+
+    public boolean validateMember(Member member) {
+        return !this.member.equals(member);
+    }
 }

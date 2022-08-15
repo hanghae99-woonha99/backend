@@ -1,6 +1,5 @@
 package com.sparta.woonha99.controller;
 
-import com.sparta.woonha99.dto.request.PostLikeRequestDto;
 import com.sparta.woonha99.dto.response.ResponseDto;
 import com.sparta.woonha99.service.PostLikeService;
 import lombok.RequiredArgsConstructor;
