@@ -48,9 +48,9 @@ public class PostLikeService {
         PostLike postLike = isPresentPostLikeByPost(post);
         postLike.updatePostLike();
 
-        if (post.validateMember(member)) {
-            return ResponseDto.fail("BAD_REQUEST", "작성자만 수정할 수 있습니다.");
-        }
+//        if (post.validateMember(member)) {
+//            return ResponseDto.fail("BAD_REQUEST", "작성자만 수정할 수 있습니다.");
+//        }
 
         return postLike.getIsLike() ?
                 ResponseDto.success(

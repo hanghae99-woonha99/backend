@@ -20,7 +20,7 @@ public class MemberController {
   private final MemberService memberService;
 
   @GetMapping("/validate/nickname")
-  public ResponseDto<?> validateNickname(@RequestBody @Valid MemberRequestDto requestDto) {
+  public ResponseDto<?> validateNickname(@RequestBody MemberRequestDto requestDto) {
     return memberService.validateNickname(requestDto) ?
             ResponseDto.success(
                     MemberResponseDto.builder()

@@ -14,6 +14,9 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class CommentResponseDto {
     @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Long postId;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Long commentId;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)

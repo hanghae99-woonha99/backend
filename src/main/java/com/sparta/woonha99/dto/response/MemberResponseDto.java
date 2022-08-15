@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MemberResponseDto {
-
+  @JsonInclude(JsonInclude.Include.NON_NULL)
   private String nickname;
 
   @JsonInclude(JsonInclude.Include.NON_DEFAULT)

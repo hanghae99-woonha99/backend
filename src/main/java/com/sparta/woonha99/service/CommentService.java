@@ -62,7 +62,13 @@ public class CommentService {
 
         return ResponseDto.success(
                 CommentResponseDto.builder()
-                        .msg("댓글 작성 완료")
+                        .postId(post.getPostId())
+                        .commentId(comment.getCommentId())
+                        .author(member.getNickname())
+                        .descript(comment.getDescript())
+                        .commentLikesCnt(commentLikeRepository.countByComment(comment))
+                        .createdAt(comment.getCreatedAt())
+                        .modifiedAt(comment.getModifiedAt())
                         .build()
         );
     }

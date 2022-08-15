@@ -46,9 +46,9 @@ public class CommentLikeService {
         commentLike.updateCommentLike();
         System.out.println("Comment Like : " + commentLike.getIsLike());
 
-        if (comment.validateMember(member)) {
-            return ResponseDto.fail("BAD_REQUEST", "작성자만 수정할 수 있습니다.");
-        }
+//        if (comment.validateMember(member)) {
+//            return ResponseDto.fail("BAD_REQUEST", "작성자만 수정할 수 있습니다.");
+//        }
 
         return commentLike.getIsLike() ?
                 ResponseDto.success(
