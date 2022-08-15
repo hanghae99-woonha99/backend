@@ -1,5 +1,6 @@
 package com.sparta.woonha99.domain;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,22 +12,25 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Entity(name = "likes")
-public class Like extends Timestamped {
+@Entity(name = "post_like")
+public class PostLike extends Timestamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long likeId;
+    private Long postLikeId;
 
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "member_id")
     @ManyToOne(fetch = FetchType.LAZY)
-    private User user;
+    private Member member;
 
     @JoinColumn(name = "post_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private Post post;
 
-    @JoinColumn(name = "comment_id")
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Comment comment;
+    @Column(name = "is_like", nullable = false)
+    private Boolean isLike;
+
+    public void updatePostLike() {
+        this.isLike = !this.isLike;
+    }
 }

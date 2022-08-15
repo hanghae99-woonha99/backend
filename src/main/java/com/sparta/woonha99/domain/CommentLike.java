@@ -6,32 +6,32 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Getter
-@Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Comment extends Timestamped {
+@Entity(name = "comment_like")
+public class CommentLike extends Timestamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long commentId;
+    private Long commentLikeId;
 
-    @Column(nullable = false)
-    private String descript;
-
-    @JoinColumn(name = "member_id", nullable = false)
+    @JoinColumn(name = "member_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 
-    @JoinColumn(name = "post_id", nullable = false)
+    @JoinColumn(name = "comment_id")
     @ManyToOne(fetch = FetchType.LAZY)
-    private Post post;
+    private Comment comment;
 
-    @OneToMany(mappedBy = "comment", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<CommentLike> commentLikes;
+    @Column(name = "is_like", nullable = false)
+    private Boolean isLike;
+
+    public void updateCommentLike() {
+        this.isLike = !this.isLike;
+    }
 
     public boolean validateMember(Member member) {
         return !this.member.equals(member);

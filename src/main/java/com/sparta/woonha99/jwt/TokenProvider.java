@@ -1,15 +1,17 @@
 package com.sparta.woonha99.jwt;
 
-import com.sparta.woonha99.domain.User;
+import com.sparta.woonha99.domain.Member;
 import com.sparta.woonha99.domain.RefreshToken;
 import com.sparta.woonha99.domain.UserDetailsImpl;
 import com.sparta.woonha99.dto.request.TokenDto;
+import com.sparta.woonha99.dto.response.MemberResponseDto;
 import com.sparta.woonha99.dto.response.ResponseDto;
 import com.sparta.woonha99.repository.RefreshTokenRepository;
 import com.sparta.woonha99.shared.Authority;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SecurityException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -43,13 +45,13 @@ public class TokenProvider {
     this.key = Keys.hmacShaKeyFor(keyBytes);
   }
 
-  public TokenDto generateTokenDto(User user) {
+  public TokenDto generateTokenDto(Member member) {
     long now = (new Date().getTime());
 
     Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
     String accessToken = Jwts.builder()
-        .setSubject(user.getNickname())
-        .claim(AUTHORITIES_KEY, Authority.ROLE_USER.toString())
+        .setSubject(member.getNickname())
+        .claim(AUTHORITIES_KEY, Authority.ROLE_MEMBER.toString())
         .setExpiration(accessTokenExpiresIn)
         .signWith(key, SignatureAlgorithm.HS256)
         .compact();
@@ -60,8 +62,8 @@ public class TokenProvider {
         .compact();
 
     RefreshToken refreshTokenObject = RefreshToken.builder()
-        .id(user.getUserId())
-        .user(user)
+        .id(member.getId())
+        .member(member)
         .value(refreshToken)
         .build();
 
@@ -93,13 +95,13 @@ public class TokenProvider {
 //    return new UsernamePasswordAuthenticationToken(principal, "", authorities);
 //  }
 
-  public User getUserFromAuthentication() {
+  public Member getMemberFromAuthentication() {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     if (authentication == null || AnonymousAuthenticationToken.class.
         isAssignableFrom(authentication.getClass())) {
       return null;
     }
-    return ((UserDetailsImpl) authentication.getPrincipal()).getUser();
+    return ((UserDetailsImpl) authentication.getPrincipal()).getMember();
   }
 
   public boolean validateToken(String token) {
@@ -127,19 +129,23 @@ public class TokenProvider {
 //  }
 
   @Transactional(readOnly = true)
-  public RefreshToken isPresentRefreshToken(User user) {
-    Optional<RefreshToken> optionalRefreshToken = refreshTokenRepository.findByUser(user);
+  public RefreshToken isPresentRefreshToken(Member member) {
+    Optional<RefreshToken> optionalRefreshToken = refreshTokenRepository.findByMember(member);
     return optionalRefreshToken.orElse(null);
   }
 
   @Transactional
-  public ResponseDto<?> deleteRefreshToken(User user) {
-    RefreshToken refreshToken = isPresentRefreshToken(user);
+  public ResponseDto<?> deleteRefreshToken(Member member) {
+    RefreshToken refreshToken = isPresentRefreshToken(member);
     if (null == refreshToken) {
       return ResponseDto.fail("TOKEN_NOT_FOUND", "존재하지 않는 Token 입니다.");
     }
 
     refreshTokenRepository.delete(refreshToken);
-    return ResponseDto.success("success");
+    return ResponseDto.success(
+            MemberResponseDto.builder()
+                    .msg("로그아웃 성공")
+                    .build()
+    );
   }
 }
