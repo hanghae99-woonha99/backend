@@ -12,7 +12,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Builder
 @Entity(name = "comment_like")
-public class CommentLike {
+public class CommentLike extends Timestamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,4 +26,14 @@ public class CommentLike {
     @ManyToOne(fetch = FetchType.LAZY)
     private Comment comment;
 
+    @Column(name = "is_like", nullable = false)
+    private boolean isLike;
+
+    public void updateCommentLike() {
+        this.isLike = !this.isLike;
+    }
+
+    public boolean validateMember(Member member) {
+        return !this.member.equals(member);
+    }
 }
