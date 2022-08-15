@@ -14,27 +14,32 @@ import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/auth/posts")
 public class PostController {
 
     private final PostService postService;
 
-    @PostMapping("")
-    public ResponseDto<?> createPost(@RequestBody PostRequestDto requestDto,HttpServletRequest request){
-        return postService.createPost(requestDto,request);
+    @PostMapping("/api/auth/posts")
+    public ResponseDto<?> createPost(@RequestBody PostRequestDto requestDto, HttpServletRequest request){
+        return postService.createPost(requestDto, request);
+    }
+
+    @GetMapping("/api/posts")
+    public ResponseDto<?> getAllPosts() {
+        return postService.getAllPosts();
+    }
+
+    @GetMapping("/api/posts/{postId}")
+    public ResponseDto<?> getPost(@PathVariable Long postId) {
+        return postService.getPostByPostId(postId);
     }
     
-    @PutMapping("/{postId}")
-    public ResponseDto<?> updatePost(@PathVariable Long postId,@RequestBody PostRequestDto requestDto,HttpServletRequest request){
-        return postService.updatePost(postId,requestDto, request);
+    @PutMapping("/api/auth/posts/{postId}")
+    public ResponseDto<?> updatePost(@PathVariable Long postId, @RequestBody PostRequestDto requestDto,HttpServletRequest request){
+        return postService.updatePostByPostId(postId, requestDto, request);
     }
 
-    @DeleteMapping("{postId}")
+    @DeleteMapping("/api/auth/posts/{postId}")
     public ResponseDto<?> deletePost(@PathVariable Long postId, HttpServletRequest request) {
-        return postService.deletePost(postId, request);
+        return postService.deletePostByPostId(postId, request);
     }
-
-
-
-
 }

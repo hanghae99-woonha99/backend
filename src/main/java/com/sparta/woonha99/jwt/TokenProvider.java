@@ -38,7 +38,7 @@ public class TokenProvider {
 //  private final UserDetailsServiceImpl userDetailsService;
 
   public TokenProvider(@Value("${jwt.secret}") String secretKey,
-                       RefreshTokenRepository refreshTokenRepository) {
+      RefreshTokenRepository refreshTokenRepository) {
     this.refreshTokenRepository = refreshTokenRepository;
     byte[] keyBytes = Decoders.BASE64.decode(secretKey);
     this.key = Keys.hmacShaKeyFor(keyBytes);
@@ -49,31 +49,31 @@ public class TokenProvider {
 
     Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
     String accessToken = Jwts.builder()
-            .setSubject(member.getNickname())
-            .claim(AUTHORITIES_KEY, Authority.ROLE_MEMBER.toString())
-            .setExpiration(accessTokenExpiresIn)
-            .signWith(key, SignatureAlgorithm.HS256)
-            .compact();
+        .setSubject(member.getNickname())
+        .claim(AUTHORITIES_KEY, Authority.ROLE_MEMBER.toString())
+        .setExpiration(accessTokenExpiresIn)
+        .signWith(key, SignatureAlgorithm.HS256)
+        .compact();
 
     String refreshToken = Jwts.builder()
-            .setExpiration(new Date(now + REFRESH_TOKEN_EXPRIRE_TIME))
-            .signWith(key, SignatureAlgorithm.HS256)
-            .compact();
+        .setExpiration(new Date(now + REFRESH_TOKEN_EXPRIRE_TIME))
+        .signWith(key, SignatureAlgorithm.HS256)
+        .compact();
 
     RefreshToken refreshTokenObject = RefreshToken.builder()
-            .id(member.getMemberId())
-            .member(member)
-            .value(refreshToken)
-            .build();
+        .id(member.getId())
+        .member(member)
+        .value(refreshToken)
+        .build();
 
     refreshTokenRepository.save(refreshTokenObject);
 
     return TokenDto.builder()
-            .grantType(BEARER_PREFIX)
-            .accessToken(accessToken)
-            .accessTokenExpiresIn(accessTokenExpiresIn.getTime())
-            .refreshToken(refreshToken)
-            .build();
+        .grantType(BEARER_PREFIX)
+        .accessToken(accessToken)
+        .accessTokenExpiresIn(accessTokenExpiresIn.getTime())
+        .refreshToken(refreshToken)
+        .build();
 
   }
 
@@ -97,7 +97,7 @@ public class TokenProvider {
   public Member getMemberFromAuthentication() {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     if (authentication == null || AnonymousAuthenticationToken.class.
-            isAssignableFrom(authentication.getClass())) {
+        isAssignableFrom(authentication.getClass())) {
       return null;
     }
     return ((UserDetailsImpl) authentication.getPrincipal()).getMember();
@@ -141,6 +141,6 @@ public class TokenProvider {
     }
 
     refreshTokenRepository.delete(refreshToken);
-    return ResponseDto.success("success");
+    return ResponseDto.success("로그아웃 성공");
   }
 }
