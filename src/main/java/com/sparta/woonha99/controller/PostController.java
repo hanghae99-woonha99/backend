@@ -1,16 +1,14 @@
 package com.sparta.woonha99.controller;
 
-import com.sparta.woonha99.domain.Post;
 import com.sparta.woonha99.dto.request.PostRequestDto;
-import com.sparta.woonha99.dto.response.PostResponseDto;
 import com.sparta.woonha99.dto.response.ResponseDto;
-import com.sparta.woonha99.jwt.TokenProvider;
 import com.sparta.woonha99.service.PostService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,8 +17,10 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping("/auth/posts")
-    public ResponseDto<?> createPost(@RequestBody PostRequestDto requestDto, HttpServletRequest request){
-        return postService.createPost(requestDto, request);
+    public ResponseDto<?> createPost(@RequestPart("data") PostRequestDto requestDto,
+                                     HttpServletRequest request,
+                                     @RequestPart("image") MultipartFile multipartFile) throws IOException {
+        return postService.createPost(requestDto, request, multipartFile);
     }
 
     @GetMapping("/posts")
