@@ -19,8 +19,8 @@ public class MemberRequestDto {
   private String nickname;
 
   @NotBlank
-  @Size(min = 4, max = 32)
-  @Pattern(regexp = "[a-z\\d]*${3,32}")
+  @Size(min = 8, max = 20)
+  @Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*\\d).{8,20}$") // 영문, 숫자 포함 8자 이상 20자 이하
   private String password;
 
   @NotBlank
