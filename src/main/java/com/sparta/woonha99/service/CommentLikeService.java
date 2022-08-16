@@ -42,32 +42,36 @@ public class CommentLikeService {
             return ResponseDto.fail("NOT_FOUND", "존재하지 않는 댓글 id 입니다.");
         }
 
-        CommentLike commentLike = isPresentCommentLikeByComment(comment);
-        commentLike.updateCommentLike();
-        System.out.println("Comment Like : " + commentLike.getIsLike());
+        CommentLike commentLike = isPresentCommentLikeByComment(member, comment);
 
-//        if (comment.validateMember(member)) {
-//            return ResponseDto.fail("BAD_REQUEST", "작성자만 수정할 수 있습니다.");
-//        }
+        if (null == commentLike) {
+            commentLikeRepository.save(
+                    CommentLike.builder()
+                            .member(member)
+                            .comment(comment)
+                            .build()
+            );
+            return ResponseDto.success(
+                    LikeResponseDto.builder()
+                            .isLike(true)
+                            .msg("댓글 좋아요 성공")
+                            .build()
+            );
+        } else {
+            commentLikeRepository.delete(commentLike);
+            return ResponseDto.success(
+                    LikeResponseDto.builder()
+                            .isLike(false)
+                            .msg("댓글 좋아요 취소 성공")
+                            .build()
+            );
+        }
 
-        return commentLike.getIsLike() ?
-                ResponseDto.success(
-                        LikeResponseDto.builder()
-                                .isLike(commentLike.getIsLike())
-                                .msg("댓글 좋아요 성공")
-                                .build()
-                ) :
-                ResponseDto.success(
-                        LikeResponseDto.builder()
-                                .isLike(commentLike.getIsLike())
-                                .msg("댓글 좋아요 취소 성공")
-                                .build()
-                );
     }
 
     @Transactional(readOnly = true)
-    public CommentLike isPresentCommentLikeByComment(Comment comment) {
-        Optional<CommentLike> optionalLike = commentLikeRepository.findByComment(comment);
+    public CommentLike isPresentCommentLikeByComment(Member member, Comment comment) {
+        Optional<CommentLike> optionalLike = commentLikeRepository.findByMemberAndComment(member, comment);
         return optionalLike.orElse(null);
     }
 

@@ -45,31 +45,37 @@ public class PostLikeService {
             return ResponseDto.fail("NOT_FOUND", "존재하지 않는 게시글 id 입니다.");
         }
 
-        PostLike postLike = isPresentPostLikeByPost(post);
-        postLike.updatePostLike();
+        PostLike postLike = isPresentPostLikeByPost(member, post);
 
-//        if (post.validateMember(member)) {
-//            return ResponseDto.fail("BAD_REQUEST", "작성자만 수정할 수 있습니다.");
-//        }
-
-        return postLike.getIsLike() ?
-                ResponseDto.success(
-                        LikeResponseDto.builder()
-                                .isLike(postLike.getIsLike())
-                                .msg("게시글 좋아요 성공")
-                                .build()
-                ) :
-                ResponseDto.success(
-                        LikeResponseDto.builder()
-                                .isLike(postLike.getIsLike())
-                                .msg("게시글 좋아요 취소 성공")
-                                .build()
-                );
+        if (null == postLike) {
+            // 좋아요가 안되어있음
+            postLikeRepository.save(
+                    PostLike.builder()
+                            .member(member)
+                            .post(post)
+                            .build()
+            );
+            return ResponseDto.success(
+                    LikeResponseDto.builder()
+                            .isLike(true)
+                            .msg("게시글 좋아요 성공")
+                            .build()
+            );
+        } else {
+            // 좋아요가 되어있음
+            postLikeRepository.delete(postLike);
+            return ResponseDto.success(
+                    LikeResponseDto.builder()
+                            .isLike(false)
+                            .msg("게시글 좋아요 취소 성공")
+                            .build()
+            );
+        }
     }
 
     @Transactional(readOnly = true)
-    public PostLike isPresentPostLikeByPost(Post post) {
-        Optional<PostLike> optionalLike = postLikeRepository.findByPost(post);
+    public PostLike isPresentPostLikeByPost(Member member, Post post) {
+        Optional<PostLike> optionalLike = postLikeRepository.findByMemberAndPost(member, post);
         return optionalLike.orElse(null);
     }
 

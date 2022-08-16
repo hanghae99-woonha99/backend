@@ -26,14 +26,4 @@ public class CommentLike extends Timestamped {
     @ManyToOne(fetch = FetchType.LAZY)
     private Comment comment;
 
-    @Column(name = "is_like", nullable = false)
-    private Boolean isLike;
-
-    public void updateCommentLike() {
-        this.isLike = !this.isLike;
-    }
-
-    public boolean validateMember(Member member) {
-        return !this.member.equals(member);
-    }
 }
