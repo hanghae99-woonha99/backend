@@ -53,13 +53,6 @@ public class CommentService {
                 .build();
         commentRepository.save(comment);
 
-        CommentLike commentLike = CommentLike.builder()
-                .member(member)
-                .comment(comment)
-                .isLike(false)
-                .build();
-        commentLikeRepository.save(commentLike);
-
         return ResponseDto.success(
                 CommentResponseDto.builder()
                         .postId(post.getPostId())
