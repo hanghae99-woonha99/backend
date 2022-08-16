@@ -70,17 +70,10 @@ public class PostService {
                 .build();
         postRepository.save(post);
 
-        PostLike postLike = PostLike.builder()
-                .member(member)
-                .post(post)
-                .isLike(false)
-                .build();
-        postLikeRepository.save(postLike);
-
         return ResponseDto.success(
             PostResponseDto.builder()
                     .msg("게시글 작성 완료")
-                    .postLikesCnt(null)
+//                    .postLikesCnt(null)
                     .build()
         );
     }

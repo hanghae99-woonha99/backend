@@ -27,10 +27,4 @@ public class PostLike extends Timestamped {
     @ManyToOne(fetch = FetchType.LAZY)
     private Post post;
 
-    @Column(name = "is_like", nullable = false)
-    private Boolean isLike;
-
-    public void updatePostLike() {
-        this.isLike = !this.isLike;
-    }
 }
