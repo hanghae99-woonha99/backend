@@ -31,10 +31,10 @@ public class PostResponseDto {
     private String imgUrl;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Long postLikesCnt;
+    private Long postLikeCnt;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Long commentsCnt;
+    private Long commentCnt;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private LocalDateTime createdAt;

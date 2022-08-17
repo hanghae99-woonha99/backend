@@ -22,17 +22,17 @@ public class CommentLikeService {
 
     @Transactional
     public ResponseDto<?> toggleCommentLikeByCommentId(Long commentId, HttpServletRequest request) {
-        if (null == request.getHeader("Refresh-Token")) {
-            return ResponseDto.fail("MEMBER_NOT_FOUND",
-                    "로그인이 필요합니다.");
-        }
+//        if (null == request.getHeader("Refresh-Token")) {
+//            return ResponseDto.fail("MEMBER_NOT_FOUND",
+//                    "로그인이 필요합니다.");
+//        }
 
         if (null == request.getHeader("Authorization")) {
             return ResponseDto.fail("MEMBER_NOT_FOUND",
                     "로그인이 필요합니다.");
         }
 
-        Member member = validateMember(request);
+        Member member = validateMember();
         if (null == member) {
             return ResponseDto.fail("INVALID_TOKEN", "Token이 유효하지 않습니다.");
         }
@@ -54,6 +54,7 @@ public class CommentLikeService {
             return ResponseDto.success(
                     LikeResponseDto.builder()
                             .isLike(true)
+                            .commentLikeCnt(commentLikeRepository.countByComment(comment))
                             .msg("댓글 좋아요 성공")
                             .build()
             );
@@ -62,6 +63,7 @@ public class CommentLikeService {
             return ResponseDto.success(
                     LikeResponseDto.builder()
                             .isLike(false)
+                            .commentLikeCnt(commentLikeRepository.countByComment(comment))
                             .msg("댓글 좋아요 취소 성공")
                             .build()
             );
@@ -76,10 +78,10 @@ public class CommentLikeService {
     }
 
     @Transactional
-    public Member validateMember(HttpServletRequest request) {
-        if (!tokenProvider.validateToken(request.getHeader("Refresh-Token"))) {
-            return null;
-        }
+    public Member validateMember() {
+//        if (!tokenProvider.validateToken(request.getHeader("Refresh-Token"))) {
+//            return null;
+//        }
         return tokenProvider.getMemberFromAuthentication();
     }
 }

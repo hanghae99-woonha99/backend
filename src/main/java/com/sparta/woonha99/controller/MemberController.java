@@ -19,7 +19,7 @@ public class MemberController {
 
   private final MemberService memberService;
 
-  @GetMapping("/validate/nickname")
+  @PostMapping("/validate/nickname")
   public ResponseDto<?> validateNickname(@RequestBody MemberRequestDto requestDto) {
     return memberService.validateNickname(requestDto) ?
             ResponseDto.success(
@@ -48,8 +48,8 @@ public class MemberController {
 //    return memberService.reissue(request, response);
 //  }
 
-  @PostMapping("/logout")
-  public ResponseDto<?> logout(HttpServletRequest request) {
-    return memberService.logout(request);
-  }
+//  @PostMapping("/logout")
+//  public ResponseDto<?> logout(HttpServletRequest request) {
+//    return memberService.logout(request);
+//  }
 }

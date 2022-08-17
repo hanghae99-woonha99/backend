@@ -3,7 +3,6 @@ package com.sparta.woonha99.service;
 import com.sparta.woonha99.domain.Comment;
 import com.sparta.woonha99.domain.Member;
 import com.sparta.woonha99.domain.Post;
-import com.sparta.woonha99.domain.PostLike;
 import com.sparta.woonha99.dto.request.PostRequestDto;
 import com.sparta.woonha99.dto.response.CommentResponseDto;
 import com.sparta.woonha99.dto.response.PostResponseDto;
@@ -41,17 +40,17 @@ public class PostService {
                                      HttpServletRequest request,
                                      MultipartFile multipartFile) throws IOException {
 
-        if (null == request.getHeader("Refresh-Token")) {
-            return ResponseDto.fail("MEMBER_NOT_FOUND",
-                    "로그인이 필요합니다.");
-        }
+//        if (null == request.getHeader("Refresh-Token")) {
+//            return ResponseDto.fail("MEMBER_NOT_FOUND",
+//                    "로그인이 필요합니다.");
+//        }
 
         if (null == request.getHeader("Authorization")) {
             return ResponseDto.fail("MEMBER_NOT_FOUND",
                     "로그인이 필요합니다.");
         }
 
-        Member member = validateMember(request);
+        Member member = validateMember();
         if (null == member) {
             return ResponseDto.fail("INVALID_TOKEN", "Token이 유효하지 않습니다.");
         }
@@ -91,8 +90,8 @@ public class PostService {
                             .descript(post.getDescript())
                             .imgUrl(post.getImgUrl())
                             .author(post.getMember().getNickname())
-                            .postLikesCnt(postLikeRepository.countByPost(post))
-                            .commentsCnt(commentRepository.countByPost(post))
+                            .postLikeCnt(postLikeRepository.countByPost(post))
+                            .commentCnt(commentRepository.countByPost(post))
                             .createdAt(post.getCreatedAt())
                             .modifiedAt(post.getModifiedAt())
                             .build()
@@ -118,7 +117,7 @@ public class PostService {
                             .commentId(comment.getCommentId())
                             .author(comment.getMember().getNickname())
                             .descript(comment.getDescript())
-                            .commentLikesCnt(commentLikeRepository.countByComment(comment))
+                            .commentLikeCnt(commentLikeRepository.countByComment(comment))
                             .createdAt(comment.getCreatedAt())
                             .modifiedAt(comment.getModifiedAt())
                             .build()
@@ -133,8 +132,8 @@ public class PostService {
                         .commentResponseDtoList(commentResponseDtoList)
                         .author(post.getMember().getNickname())
                         .imgUrl(post.getImgUrl())
-                        .postLikesCnt(postLikeRepository.countByPost(post))
-                        .commentsCnt(commentRepository.countByPost(post))
+                        .postLikeCnt(postLikeRepository.countByPost(post))
+                        .commentCnt(commentRepository.countByPost(post))
                         .createdAt(post.getCreatedAt())
                         .modifiedAt(post.getModifiedAt())
                         .build()
@@ -144,17 +143,17 @@ public class PostService {
     @Transactional
     public ResponseDto<?> updatePostByPostId(Long postId, PostRequestDto requestDto,
                                              MultipartFile multipartFile, HttpServletRequest request) throws IOException {
-        if (null == request.getHeader("Refresh-Token")) {
-            return ResponseDto.fail("MEMBER_NOT_FOUND",
-                    "로그인이 필요합니다.");
-        }
+//        if (null == request.getHeader("Refresh-Token")) {
+//            return ResponseDto.fail("MEMBER_NOT_FOUND",
+//                    "로그인이 필요합니다.");
+//        }
 
         if (null == request.getHeader("Authorization")) {
             return ResponseDto.fail("MEMBER_NOT_FOUND",
                     "로그인이 필요합니다.");
         }
 
-        Member member = validateMember(request);
+        Member member = validateMember();
         if (null == member) {
             return ResponseDto.fail("INVALID_TOKEN", "Token이 유효하지 않습니다.");
         }
@@ -186,17 +185,17 @@ public class PostService {
 
     @Transactional
     public ResponseDto<?> deletePostByPostId(Long postId, HttpServletRequest request) {
-        if (null == request.getHeader("Refresh-Token")) {
-            return ResponseDto.fail("MEMBER_NOT_FOUND",
-                    "로그인이 필요합니다.");
-        }
+//        if (null == request.getHeader("Refresh-Token")) {
+//            return ResponseDto.fail("MEMBER_NOT_FOUND",
+//                    "로그인이 필요합니다.");
+//        }
 
         if (null == request.getHeader("Authorization")) {
             return ResponseDto.fail("MEMBER_NOT_FOUND",
                     "로그인이 필요합니다.");
         }
 
-        Member member = validateMember(request);
+        Member member = validateMember();
         if (null == member) {
             return ResponseDto.fail("INVALID_TOKEN", "Token이 유효하지 않습니다.");
         }
@@ -225,10 +224,10 @@ public class PostService {
     }
 
     @Transactional
-    public Member validateMember(HttpServletRequest request) {
-        if (!tokenProvider.validateToken(request.getHeader("Refresh-Token"))) {
-            return null;
-        }
+    public Member validateMember() {
+//        if (!tokenProvider.validateToken(request.getHeader("Refresh-Token"))) {
+//            return null;
+//        }
         return tokenProvider.getMemberFromAuthentication();
     }
 }

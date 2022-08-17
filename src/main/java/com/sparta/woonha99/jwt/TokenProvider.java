@@ -30,17 +30,16 @@ public class TokenProvider {
 
   private static final String AUTHORITIES_KEY = "auth";
   private static final String BEARER_PREFIX = "Bearer ";
-  private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 30;            //30분
-  private static final long REFRESH_TOKEN_EXPRIRE_TIME = 1000 * 60 * 60 * 24 * 7;     //7일
+  private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 12;            // 1/2일 = 12시간
+//  private static final long REFRESH_TOKEN_EXPRIRE_TIME = 1000 * 60 * 60 * 24 * 7;     //7일
 
   private final Key key;
 
-  private final RefreshTokenRepository refreshTokenRepository;
+//  private final RefreshTokenRepository refreshTokenRepository;
 //  private final UserDetailsServiceImpl userDetailsService;
 
-  public TokenProvider(@Value("${jwt.secret}") String secretKey,
-      RefreshTokenRepository refreshTokenRepository) {
-    this.refreshTokenRepository = refreshTokenRepository;
+  public TokenProvider(@Value("${jwt.secret}") String secretKey) {
+//    this.refreshTokenRepository = refreshTokenRepository;
     byte[] keyBytes = Decoders.BASE64.decode(secretKey);
     this.key = Keys.hmacShaKeyFor(keyBytes);
   }
@@ -56,24 +55,24 @@ public class TokenProvider {
         .signWith(key, SignatureAlgorithm.HS256)
         .compact();
 
-    String refreshToken = Jwts.builder()
-        .setExpiration(new Date(now + REFRESH_TOKEN_EXPRIRE_TIME))
-        .signWith(key, SignatureAlgorithm.HS256)
-        .compact();
-
-    RefreshToken refreshTokenObject = RefreshToken.builder()
-        .id(member.getId())
-        .member(member)
-        .value(refreshToken)
-        .build();
-
-    refreshTokenRepository.save(refreshTokenObject);
+//    String refreshToken = Jwts.builder()
+//        .setExpiration(new Date(now + REFRESH_TOKEN_EXPRIRE_TIME))
+//        .signWith(key, SignatureAlgorithm.HS256)
+//        .compact();
+//
+//    RefreshToken refreshTokenObject = RefreshToken.builder()
+//        .id(member.getId())
+//        .member(member)
+//        .value(refreshToken)
+//        .build();
+//
+//    refreshTokenRepository.save(refreshTokenObject);
 
     return TokenDto.builder()
         .grantType(BEARER_PREFIX)
         .accessToken(accessToken)
         .accessTokenExpiresIn(accessTokenExpiresIn.getTime())
-        .refreshToken(refreshToken)
+//        .refreshToken(refreshToken)
         .build();
 
   }
@@ -128,24 +127,24 @@ public class TokenProvider {
 //    }
 //  }
 
-  @Transactional(readOnly = true)
-  public RefreshToken isPresentRefreshToken(Member member) {
-    Optional<RefreshToken> optionalRefreshToken = refreshTokenRepository.findByMember(member);
-    return optionalRefreshToken.orElse(null);
-  }
+//  @Transactional(readOnly = true)
+//  public RefreshToken isPresentRefreshToken(Member member) {
+//    Optional<RefreshToken> optionalRefreshToken = refreshTokenRepository.findByMember(member);
+//    return optionalRefreshToken.orElse(null);
+//  }
 
-  @Transactional
-  public ResponseDto<?> deleteRefreshToken(Member member) {
-    RefreshToken refreshToken = isPresentRefreshToken(member);
-    if (null == refreshToken) {
-      return ResponseDto.fail("TOKEN_NOT_FOUND", "존재하지 않는 Token 입니다.");
-    }
-
-    refreshTokenRepository.delete(refreshToken);
-    return ResponseDto.success(
-            MemberResponseDto.builder()
-                    .msg("로그아웃 성공")
-                    .build()
-    );
-  }
+//  @Transactional
+//  public ResponseDto<?> deleteRefreshToken(Member member) {
+//    RefreshToken refreshToken = isPresentRefreshToken(member);
+//    if (null == refreshToken) {
+//      return ResponseDto.fail("TOKEN_NOT_FOUND", "존재하지 않는 Token 입니다.");
+//    }
+//
+//    refreshTokenRepository.delete(refreshToken);
+//    return ResponseDto.success(
+//            MemberResponseDto.builder()
+//                    .msg("로그아웃 성공")
+//                    .build()
+//    );
+//  }
 }
