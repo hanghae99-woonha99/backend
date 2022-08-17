@@ -77,6 +77,8 @@ public class SecurityConfiguration {
     configuration.setAllowCredentials(true);
     configuration.addExposedHeader("*");
     configuration.addExposedHeader("Authorization");
+//    configuration.addExposedHeader("Refresh-Token");
+    configuration.addExposedHeader("Access-Token-Expire-Time");
 
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
     source.registerCorsConfiguration("/**", configuration);

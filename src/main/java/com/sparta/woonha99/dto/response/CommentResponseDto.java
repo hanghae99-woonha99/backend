@@ -26,7 +26,7 @@ public class CommentResponseDto {
     private String descript;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Long commentLikesCnt;
+    private Long commentLikeCnt;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String msg;
